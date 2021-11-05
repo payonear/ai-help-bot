@@ -54,8 +54,8 @@ class Scraper:
 
     def scrap_all(self) -> list:
         all_todays_posts = []
-        all_todays_posts.append(self.__scrap_facebook())
-        # all_todays_posts.append(self.__scrap_google())
-        # all_todays_posts.append(self.__scrap_openai())
-        # all_todays_posts.append(self.__scrap_stanford())
+        all_todays_posts.extend(self.__scrap_facebook())
+        # all_todays_posts.extend(self.__scrap_google())
+        # all_todays_posts.extend(self.__scrap_openai())
+        # all_todays_posts.extend(self.__scrap_stanford())
         return all_todays_posts
