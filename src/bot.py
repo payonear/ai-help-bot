@@ -5,7 +5,6 @@ from telegram.ext import (  # CallbackQueryHandler,; Filters,; MessageHandler,; 
     CommandHandler,
     Updater,
 )
-from telegram.utils.helpers import escape_markdown
 
 from scrapper import Scraper
 
@@ -16,10 +15,8 @@ logging.basicConfig(
 
 def get_todays(update, context):
     scraper = Scraper()
-    posts = scraper.scrap_all()
-    for post in posts:
-        (org, domen, date, title, descr, link) = [escape_markdown(el, version=2) for el in post]
-        message = f"__{domen}__\n{org} \\- {date}\n*{title}*\n_{descr}_\n[Go to blog post]({link})"
+    messages = scraper.scrape_all()
+    for message in messages:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=message,
