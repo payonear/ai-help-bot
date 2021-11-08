@@ -1,3 +1,4 @@
+import logging
 import time
 from datetime import datetime
 
@@ -6,18 +7,24 @@ from selenium import webdriver
 from telegram.utils.helpers import escape_markdown
 from webdriver_manager.chrome import ChromeDriverManager
 
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+
+logger = logging.getLogger("tcpserver")
 driver = webdriver.Chrome(ChromeDriverManager().install())
 today = datetime.today().strftime("%B %d, %Y")
 
 
 class Scraper:
-    def __init__(self, resource: str = "facebook") -> None:
-        self.resource = resource
+    def __init__(self) -> None:
+        logger.info("Scraper is defined!")
 
     def __str__(self) -> str:
         print(f"Scraper object for {self.resource}")
 
     def __scrape_facebook(self) -> list:
+        logger.info("Starting scraping Facebook...")
         fb_todays_posts = []
         url = "https://ai.facebook.com/blog/"
         driver.get(url)
@@ -30,18 +37,19 @@ class Scraper:
             for post in all_posts:
                 elements = [s for s in post.strings]
                 title, descr, date = elements[-3:]
+                date = datetime.strptime(date, "%B %d, %Y").strftime("%B %d, %Y")
                 domain = "|".join(elements[:-3])
 
                 if date == today:
+                    logger.info("New post found from Facebook!")
                     link = post.find("a", href=True)["href"]
                     org = "Facebook AI"
-                    p = (org, domain, date, title, descr, link)
-                    (org, domain, date, title, descr, link) = [
-                        escape_markdown(el, version=2) for el in p
-                    ]
-                    message = f"{domain}\n{org} \\- {date}\n\n*{title}*\n_{descr}_\n[Go to blog post]({link})"
-                    fb_todays_posts.append(message)
+                    p = (org, domain, date, title, descr)
+                    (org, domain, date, title, descr) = [escape_markdown(el, version=2) for el in p]
+                    message = f"{domain}\n{org} \\- {date}\n\n*{title}*\n_{descr}_"
+                    fb_todays_posts.append((message, link))
                 else:
+                    logger.info("No other todays posts found for Facebook.")
                     break
         except:
             raise TimeoutError(f"{url} is not responding on time.")
@@ -49,6 +57,7 @@ class Scraper:
         return fb_todays_posts
 
     def __scrape_google(self) -> list:
+        logger.info("Starting scraping Google...")
         google_todays_posts = []
         url = "https://ai.googleblog.com/"
         driver.get(url)
@@ -61,15 +70,18 @@ class Scraper:
                 date = post.find("span", {"class": "publishdate"}).text
                 date = date.strip().split(",")[1:]
                 date = ",".join(date).strip()
+                date = datetime.strptime(date, "%B %d, %Y").strftime("%B %d, %Y")
 
                 if date == today:
+                    logger.info("New post found from Google!")
                     link = post.find("a", href=True)["href"]
                     org = "Google AI"
-                    p = (org, date, title, link)
-                    (org, date, title, link) = [escape_markdown(el, version=2) for el in p]
-                    message = f"{org} \\- {date}\n\n*{title}*\n[Go to blog post]({link})"
-                    google_todays_posts.append(message)
+                    p = (org, date, title)
+                    (org, date, title) = [escape_markdown(el, version=2) for el in p]
+                    message = f"{org} \\- {date}\n\n*{title}*"
+                    google_todays_posts.append((message, link))
                 else:
+                    logger.info("No other todays posts found for Google.")
                     break
         except:
             raise TimeoutError(f"{url} is not responding on time.")
@@ -77,6 +89,7 @@ class Scraper:
         return google_todays_posts
 
     def __scrape_openai(self) -> list:
+        logger.info("Starting scraping OpenAI...")
         openai_todays_posts = []
         url = "https://openai.com/blog/"
         driver.get(url)
@@ -87,17 +100,20 @@ class Scraper:
             for post in posts:
                 title = post.find("a", href=True).text
                 date = post.find("time").text
+                date = datetime.strptime(date, "%B %d, %Y").strftime("%B %d, %Y")
 
                 if date == today:
+                    logger.info("New post found from OpenAI!")
                     link = post.find("a", href=True)["href"].replace("/blog", "")
                     link = url + link
                     descr = self.__scrape_openai_post_descr(link)
                     org = "OpenAI"
-                    p = (org, date, title, descr, link)
-                    (org, date, title, descr, link) = [escape_markdown(el, version=2) for el in p]
-                    message = f"{org} \\- {date}\n\n*{title}*\n_{descr}_\n[Go to blog post]({link})"
-                    openai_todays_posts.append(message)
+                    p = (org, date, title, descr)
+                    (org, date, title, descr) = [escape_markdown(el, version=2) for el in p]
+                    message = f"{org} \\- {date}\n\n*{title}*\n_{descr}_"
+                    openai_todays_posts.append((message, link))
                 else:
+                    logger.info("No other todays posts found for OpenAI.")
                     break
         except:
             raise TimeoutError(f"{url} is not responding on time.")
@@ -105,6 +121,7 @@ class Scraper:
         return openai_todays_posts
 
     def __scrape_openai_post_descr(self, link):
+        logger.info("Scraping description for OpenAI post!")
         driver.get(link)
         try:
             time.sleep(10)

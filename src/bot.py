@@ -1,6 +1,6 @@
 import logging
 
-# from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup,
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (  # CallbackQueryHandler,; Filters,; MessageHandler,; PicklePersistence,
     CommandHandler,
     Updater,
@@ -15,13 +15,17 @@ logging.basicConfig(
 
 def get_todays(update, context):
     scraper = Scraper()
-    messages = scraper.scrape_all()
-    for message in messages:
+    posts = scraper.scrape_all()
+    for post in posts:
+        message, link = post
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=message,
             parse_mode="MarkdownV2",
-            disable_web_page_preview=True,
+            # disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton(text="Go to post", url=link)]]
+            ),
         )
 
 
