@@ -2,7 +2,7 @@ import logging
 import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CommandHandler, PicklePersistence, Updater
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from scrapper import Scraper
 
@@ -10,9 +10,32 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
-# define directory for message history
+# define directory for chat history
 history_dir = "../bot_history"
 os.makedirs(history_dir, exist_ok=True)
+
+replies = {
+    "info": """Hello, Sir\! My name is Jarvis\!
+I\'ll keep you up to date with AI research\.
+I\'ll send you new blog posts from Google AI, Facebook AI and OpenAI once added\.
+Below You may find basic commands I understand currently\.
+Commands:
+/info \- show this info message
+/start \- start sending me new blog posts
+/stop \- stop sending me new blog posts""",
+    "start": "Ok, Sir\. Starting sending You new blog posts\!",
+    "stop": """Ok, Sir, I\'ve stopped sending you new blog posts\! 
+In case you change your mind just give me `start` command\.""",
+    "not_started": """Oh, there is nothing to stop\! 
+Make sure to give command `start` before calling `stop`\. Check /info \ for more details\.""",
+    "unknown": """Sorry, Sir, `message` is unknown command\. 
+Please check available commands by writing /info \ to me\.""",
+}
+
+
+def info(update, context):
+    text = replies["info"]
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="MarkdownV2")
 
 
 def get_new_posts(context):
@@ -44,14 +67,36 @@ def get_new_posts(context):
 
 
 def schedule_requests(update, context):
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=replies["start"],
+        parse_mode="MarkdownV2",
+    )
     context.job_queue.run_repeating(
         get_new_posts, interval=90, first=10, context=update.message.chat_id
     )
 
 
-def get_history(update, context):
-    history = context.user_data
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"Chat history:\n{history}")
+def stop(update, context):
+    jobs = context.job_queue.jobs()
+    if len(jobs) > 0:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=replies["stop"],
+            parse_mode="MarkdownV2",
+        )
+        jobs[-1].schedule_removal()
+    else:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=replies["not_started"],
+            parse_mode="MarkdownV2",
+        )
+
+
+def unknown(update, context):
+    text = replies["unknown"].replace("message", update.message.text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="MarkdownV2")
 
 
 def main():
@@ -67,7 +112,9 @@ def main():
 
     # register commands
     dispatcher.add_handler(CommandHandler("start", schedule_requests, pass_job_queue=True))
-    dispatcher.add_handler(CommandHandler("history", get_history))
+    dispatcher.add_handler(CommandHandler("info", info))
+    dispatcher.add_handler(CommandHandler("stop", stop))
+    dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), unknown))
 
     # start bot
     updater.start_polling()
