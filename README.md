@@ -60,3 +60,4 @@ In case you want to host the Bot on cloud you may consider doing it using Heroku
 
 
 ## Usage
+After the bot is installed and responding to you, you may run command `/start` to make bot sending you messages if new blog posts appear. If, in some reason, you want to stop receiving messages, just give command `/stop`. When bot finishes active jobs it will stop sending you notifications (after `/stop` command you may still receive messages if bot had an active scheduled job in the moment when the command was received).
