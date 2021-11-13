@@ -18,7 +18,7 @@ A simple Telegram bot to keep you up-to-date with news from AI industry. Current
   - [Usage](#usage)
 
 ## Demo-Preview
-![img](https://github.com/payonear/ai-help-bot/blob/main/img/info.jpg)
+![img](https://github.com/payonear/ai-help-bot/blob/main/img/info_message.jpg)
 ![img](https://github.com/payonear/ai-help-bot/blob/main/img/example.jpg)
 
 ## Installation
