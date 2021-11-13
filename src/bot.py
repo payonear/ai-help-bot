@@ -22,7 +22,8 @@ Below You may find basic commands I understand currently\.
 Commands:
 /info \- show this info message
 /start \- start sending me new blog posts
-/stop \- stop sending me new blog posts""",
+/stop \- stop sending me new blog posts
+/status \- gives information whether notifications are active""",
     "start": """Ok, Sir\. Starting sending You new blog posts\!
 In case you want me to stop \- give me /stop \ command""",
     "stop": """Ok, Sir, I\'ve stopped sending you new blog posts\! 
@@ -95,6 +96,22 @@ def stop(update, context):
         )
 
 
+def status(update, context):
+    jobs = context.job_queue.jobs()
+    if len(jobs) > 0:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="I'm not sending you notifications\.",
+            parse_mode="MarkdownV2",
+        )
+    else:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="I'm sending you notifications\.",
+            parse_mode="MarkdownV2",
+        )
+
+
 def unknown(update, context):
     text = replies["unknown"].replace("message", update.message.text)
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="MarkdownV2")
@@ -115,6 +132,7 @@ def main():
     dispatcher.add_handler(CommandHandler("start", schedule_requests, pass_job_queue=True))
     dispatcher.add_handler(CommandHandler("info", info))
     dispatcher.add_handler(CommandHandler("stop", stop))
+    dispatcher.add_handler(CommandHandler("status", status))
     dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), unknown))
 
     # start bot

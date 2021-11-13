@@ -37,6 +37,9 @@ If you want to host the bot on your local machine - all you need is to follow fe
 *  Bot will ask you to provide Access Token. After you do - the bot is running, go to your bot and check it with command `/info`
 
 ##### Hosting on Heroku
+
+*NOTE:* By default Heroku is using free pricing model. It means, that the bot will sleep after apx. 30 min of inactivity and probably stop responding after about 24 hours of inactivity. In the first case it means you may need to wait longer till bot's response, in the second case you need to run the app again. Still, in both cases bot will not be able to send you notifications. So, to use the bot you should choose different pricing option.
+
 In case you want to host the Bot on cloud you may consider doing it using Heroku. Follow the steps below:
 * Repeat two first steps from the aboves instructions
 * Login or [create](https://signup.heroku.com/dc) a Heroku account.
@@ -55,8 +58,6 @@ In case you want to host the Bot on cloud you may consider doing it using Heroku
 
 * Finally, using command `git push heroku main` you can run your bot.
 * Wait a couple of minutes till the webapp is deployed abd go to your bot to check it with command `/info`
-
-*NOTE:* By default Heroku is using free pricing model. It means, that the bot will sleep after apx. 30 min of inactivity and probably stop responding after about 24 hours of inactivity. In the first case it means you may need to wait longer till bot's response, in the second case you need to run the app again. Still, in both cases bot will not be able to send you notifications. So, to use the bot you should choose different pricing option.
 
 
 ## Usage
