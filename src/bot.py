@@ -11,7 +11,7 @@ logging.basicConfig(
 )
 
 # define directory for chat history
-history_dir = "../bot_history"
+history_dir = "bot_history"
 os.makedirs(history_dir, exist_ok=True)
 
 replies = {
