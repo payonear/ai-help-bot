@@ -119,10 +119,11 @@ def main():
 
     # start bot
     if os.environ.get("SERVER_LINK"):
-        PORT = int(os.environ.get("PORT", 5000))
+        PORT = int(os.environ.get("PORT", "8443"))
         SERVER_LINK = os.environ.get("SERVER_LINK")
-        updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
-        updater.bot.setWebhook(SERVER_LINK + TOKEN)
+        updater.start_webhook(
+            listen="0.0.0.0", port=PORT, url_path=TOKEN, webhook_url=SERVER_LINK + TOKEN
+        )
     else:
         updater.start_polling()
     updater.idle()
