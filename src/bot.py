@@ -23,11 +23,12 @@ Commands:
 /info \- show this info message
 /start \- start sending me new blog posts
 /stop \- stop sending me new blog posts""",
-    "start": "Ok, Sir\. Starting sending You new blog posts\!",
+    "start": """Ok, Sir\. Starting sending You new blog posts\!
+In case you want me to stop \- give me /stop \ command""",
     "stop": """Ok, Sir, I\'ve stopped sending you new blog posts\! 
-In case you change your mind just give me `start` command\.""",
+In case you change your mind just give me /start \ command\.""",
     "not_started": """Oh, there is nothing to stop\! 
-Make sure to give command `start` before calling `stop`\. Check /info \ for more details\.""",
+Make sure to give command /start \ before calling /stop \\. Check /info \ for more details\.""",
     "unknown": """Sorry, Sir, `message` is unknown command\. 
 Please check available commands by writing /info \ to me\.""",
 }
@@ -73,7 +74,7 @@ def schedule_requests(update, context):
         parse_mode="MarkdownV2",
     )
     context.job_queue.run_repeating(
-        get_new_posts, interval=90, first=10, context=update.message.chat_id
+        get_new_posts, interval=1800, first=10, context=update.message.chat_id
     )
 
 
@@ -101,13 +102,13 @@ def unknown(update, context):
 
 def main():
     if os.environ.get("TOKEN"):
-        token = os.environ.get("TOKEN")
+        TOKEN = os.environ.get("TOKEN")
     else:
-        token = input("Please enter telegram bot token:\n")
-        os.environ["TOKEN"] = token
+        TOKEN = input("Please enter telegram bot token:\n")
+        os.environ["TOKEN"] = TOKEN
 
     # define updater and dispatcher
-    updater = Updater(token=token, use_context=True)
+    updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
     # register commands
@@ -117,7 +118,13 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), unknown))
 
     # start bot
-    updater.start_polling()
+    if os.environ.get("SERVER_LINK"):
+        PORT = int(os.environ.get("PORT", 5000))
+        SERVER_LINK = os.environ.get("SERVER_LINK")
+        updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
+        updater.bot.setWebhook(SERVER_LINK + TOKEN)
+    else:
+        updater.start_polling()
     updater.idle()
 
 
