@@ -1,8 +1,8 @@
 # AI Help Bot
 A simple Telegram bot to keep you up-to-date with news from AI industry. Currently bot sends new blog posts scraped from:
-* `Facebook AI` blog web-page
-* `Google AI` blog web-page
-* `OpenAI` blog web-page
+* `Facebook AI` blog [web-page](https://ai.facebook.com/blog/?page=1)
+* `Google AI` blog [web-page](https://ai.googleblog.com/)
+* `OpenAI` blog [web-page](https://openai.com/blog/)
   
 
 <!-- Add buttons here -->
