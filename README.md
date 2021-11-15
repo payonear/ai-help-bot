@@ -57,7 +57,7 @@ In case you want to host the Bot on cloud you may consider doing it using Heroku
 ```
 
 * Finally, using command `git push heroku main` you can run your bot.
-* Wait a couple of minutes till the webapp is deployed abd go to your bot to check it with command `/info`
+* Wait a couple of minutes till the webapp is deployed and go to your bot to check it with command `/info`
 
 
 ## Usage
