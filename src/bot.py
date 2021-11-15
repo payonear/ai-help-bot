@@ -28,7 +28,7 @@ Commands:
 In case you want me to stop \- give me /stop \ command""",
     "stop": """Ok, Sir, I\'ve stopped sending you new blog posts\! 
 In case you change your mind just give me /start \ command\.""",
-    "not_stopped": "I'm already sending You notifications.",
+    "not_stopped": """I\'m already sending You notifications\.""",
     "not_started": """Oh, there is nothing to stop\! 
 Make sure to give command /start \ before calling /stop \\. Check /info \ for more details\.""",
     "unknown": """Sorry, Sir, `message` is unknown command\. 
