@@ -28,6 +28,7 @@ Commands:
 In case you want me to stop \- give me /stop \ command""",
     "stop": """Ok, Sir, I\'ve stopped sending you new blog posts\! 
 In case you change your mind just give me /start \ command\.""",
+    "not_stopped": "I'm already sending You notifications.",
     "not_started": """Oh, there is nothing to stop\! 
 Make sure to give command /start \ before calling /stop \\. Check /info \ for more details\.""",
     "unknown": """Sorry, Sir, `message` is unknown command\. 
@@ -69,14 +70,22 @@ def get_new_posts(context):
 
 
 def schedule_requests(update, context):
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=replies["start"],
-        parse_mode="MarkdownV2",
-    )
-    context.job_queue.run_repeating(
-        get_new_posts, interval=1800, first=10, context=update.message.chat_id
-    )
+    jobs = context.job_queue.jobs()
+    if len(jobs) == 0:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=replies["start"],
+            parse_mode="MarkdownV2",
+        )
+        context.job_queue.run_repeating(
+            get_new_posts, interval=1800, first=10, context=update.message.chat_id
+        )
+    else:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=replies["not_stopped"],
+            parse_mode="MarkdownV2",
+        )
 
 
 def stop(update, context):
@@ -101,13 +110,13 @@ def status(update, context):
     if len(jobs) > 0:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="I'm not sending you notifications\.",
+            text="I'm sending you notifications\.",
             parse_mode="MarkdownV2",
         )
     else:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="I'm sending you notifications\.",
+            text="I'm not sending you notifications\.",
             parse_mode="MarkdownV2",
         )
 

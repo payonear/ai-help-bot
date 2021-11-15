@@ -6,7 +6,7 @@ A simple Telegram bot to keep you up-to-date with news from AI industry. Current
   
 
 <!-- Add buttons here -->
-[![Licence](https://img.shields.io/github/license/payonear/ai-help-bot?label=license)]()
+[![License](https://img.shields.io/github/license/payonear/ai-help-bot?label=license)]()
 [![Python Version](https://img.shields.io/badge/python-3-blue)]()
 [![python-telegram-bot](https://img.shields.io/badge/python--telegram--bot-v13.7-blue)]()
 
@@ -20,7 +20,7 @@ A simple Telegram bot to keep you up-to-date with news from AI industry. Current
   - [Usage](#usage)
 
 ## Demo-Preview
-![img](https://github.com/payonear/ai-help-bot/blob/main/img/info_message.jpg)
+![img](https://github.com/payonear/ai-help-bot/blob/main/img/info_response.jpg)
 ![img](https://github.com/payonear/ai-help-bot/blob/main/img/example.jpg)
 
 ## Installation
@@ -38,7 +38,7 @@ If you want to host the bot on your local machine - all you need is to follow fe
 
 ##### Hosting on Heroku
 
-*NOTE:* By default Heroku is using free pricing model. It means, that the bot will sleep after apx. 30 min of inactivity and probably stop responding after about 24 hours of inactivity. In the first case it means you may need to wait longer till bot's response, in the second case you need to run the app again. Still, in both cases bot will not be able to send you notifications. So, to use the bot you should choose different pricing option.
+*NOTE:* By default Heroku is using free pricing model. It means, that the bot will sleep after apx. 30 min of inactivity and probably stop responding after about 24 hours of inactivity. In the first case it means you may need to wait longer till bot's response, in the second case you need to run the app again. Still, in both cases bot will not be able to send you notifications. So, to use the bot you should choose different [pricing option](https://www.heroku.com/pricing). `Hobby` tariff may be a good fit.
 
 In case you want to host the Bot on cloud you may consider doing it using Heroku. Follow the steps below:
 * Repeat two first steps from the aboves instructions
@@ -61,4 +61,4 @@ In case you want to host the Bot on cloud you may consider doing it using Heroku
 
 
 ## Usage
-After the bot is installed and responding to you, you may run command `/start` to make bot sending you messages if new blog posts appear. If, in some reason, you want to stop receiving messages, just give command `/stop`. When bot finishes active jobs it will stop sending you notifications (after `/stop` command you may still receive few messages if bot had an active scheduled job in the moment when the command was received).
+After the bot is installed and responding to you, you may run command `/start` to make bot sending you messages if new blog posts appear. If, in some reason, you want to stop receiving messages, just give command `/stop`. When bot finishes active jobs it will stop sending you notifications (after `/stop` command you may still receive few messages if bot had an active scheduled job in the moment when the command was received). If you're not sure whether a bot sends you notifications, just send him `/status` command.
